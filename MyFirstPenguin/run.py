@@ -99,11 +99,11 @@ def smartWalk(body):
         return moveTowardsPoint(body, body["mapWidth"] - x / 2, body["mapHeight"] - y / 4)
 
 
-def middleBoardState(body)
+def middleBoardState(body):
     x = body["you"]["x"]
     y = body["you"]["y"]
     if (x < body["mapWidth"]-body["mapWidth"]/3) and (x > body["mapWidth"]/3) and not visibleEnemy(body)
-        return "shoot"
+        return SHOOT
     else:
         return moveTowardsCenterOfMap(body)
 
