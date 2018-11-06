@@ -63,7 +63,7 @@ def moveTowardsCenterOfMap(body):
 
 def moveAround(body):
     if not wallInFrontOfPenguin(body):
-        return moveTowardsPoint(body, body["mapWidth"]-1, 0)
+        return moveTowardsPoint(body, randint(0, body["mapWidth"]), randint(0, body["mapHeight"]))
     elif wallInFrontOfPenguin("you"):
         return moveTowardsCenterOfMap(body)
     else:
