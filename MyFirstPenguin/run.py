@@ -84,8 +84,8 @@ def facingYou(body):
     youDi = body["you"]["direction"]
 
 
-    if ((hisDi == xWay) or (hisDi == yWay) and ((youDi == "left" and hisDi == "right") or (youDi == "right" and hisDi == "left")) or ((youDi == "top" and hisDi == "bottom") or (youDi == "bottom" and hisDi == "top"))):
-            return True
+    if ((hisDi == xWay) or (hisDi == yWay)) and (((youDi == "left" and hisDi == "right") or (youDi == "right" and hisDi == "left")) or ((youDi == "top" and hisDi == "bottom") or (youDi == "bottom" and hisDi == "top"))):
+        return True
     else:
         return False
 
