@@ -1,6 +1,6 @@
 import os
 import json
-import random
+from random import randint
 import math
 
 ROTATE_LEFT = "rotate-left"
@@ -66,7 +66,8 @@ def moveAround(body):
         return moveTowardsPoint(body, body["mapWidth"]-1, 0)
     elif wallInFrontOfPenguin("you"):
         return moveTowardsCenterOfMap(body)
-
+    else:
+        return moveTowardsPoint(body, randint(0, body["mapWidth"]), randint(0, body["mapHeight"]))
 
 
 
