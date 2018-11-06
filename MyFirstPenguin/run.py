@@ -99,23 +99,23 @@ def DangerDanger(body):
 
 def ifVisiblePinguin(body):
     #he is gay
-    if (facingYou(body)): runTheFuckAway(body)
+    if (facingYou(body)): return runTheFuckAway(body)
     else:
-        moveTowardsCenterOfMap(body)
+        return moveTowardsPoint(body, 10, 10)
 
 
 
 
 
 def runTheFuckAway(body):
-    return moveTowardsPoint(body, 1, 1)
+    moveTowardsPoint(body, body["you"]["x"]+body["enemies"]["x"] - body["mapWidth"],     body["you"]["y"]+body["enemies"]["y"] - body["mapWidth"])
 
 
 
 
 def chooseAction(body):
     action = PASS
-    action = moveAround(body)
+    action = ifVisiblePinguin(body)
     return action
 
 env = os.environ
@@ -129,7 +129,7 @@ if req_params_query == "info":
     returnObject["team"] = "Garden"
 elif req_params_query == "command":    
     body = json.loads(open(env["req"], "r").read())
-    returnObject["command"] = ifVisiblePinguin(body)
+    returnObject["command"] = chooseAction(body)
 
 response["body"] = returnObject
 responseBody.write(json.dumps(response))
