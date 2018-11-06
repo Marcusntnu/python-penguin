@@ -6,7 +6,7 @@ import math
 ROTATE_LEFT = "rotate-left"
 ROTATE_RIGHT = "rotate-right"
 ADVANCE = "advance"
-RETREAT = "shoot"
+RETREAT = "retreat"
 SHOOT = "shoot"
 PASS = "pass"
 
