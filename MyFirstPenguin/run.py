@@ -129,7 +129,7 @@ if req_params_query == "info":
     returnObject["team"] = "Garden"
 elif req_params_query == "command":    
     body = json.loads(open(env["req"], "r").read())
-    returnObject["command"] = chooseAction(body)
+    returnObject["command"] = ifVisiblePinguin(body)
 
 response["body"] = returnObject
 responseBody.write(json.dumps(response))
