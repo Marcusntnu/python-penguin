@@ -108,7 +108,7 @@ def ifVisiblePinguin(body):
 
 
 def runTheFuckAway(body):
-    moveTowardsPoint(body, body["you"]["x"]+body["enemies"]["x"] - body["mapWidth"],     body["you"]["y"]+body["enemies"]["y"] - body["mapWidth"])
+    return moveTowardsPoint(body, body["you"]["x"]+body["enemies"]["x"] - body["mapWidth"],     body["you"]["y"]+body["enemies"]["y"] - body["mapWidth"])
 
 
 
@@ -129,7 +129,7 @@ if req_params_query == "info":
     returnObject["team"] = "Garden"
 elif req_params_query == "command":    
     body = json.loads(open(env["req"], "r").read())
-    returnObject["command"] = ifVisiblePinguin(body)
+    returnObject["command"] = chooseAction(body)
 
 response["body"] = returnObject
 responseBody.write(json.dumps(response))
