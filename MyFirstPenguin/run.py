@@ -7,7 +7,7 @@ ROTATE_LEFT = "rotate-left"
 ROTATE_RIGHT = "rotate-right"
 ADVANCE = "advance"
 RETREAT = "retreat"
-SHOOT = "shoot"
+SHOOT = "shootshoot"
 PASS = "pass"
 
 MOVE_UP =  {"top" : ADVANCE, "bottom" : ROTATE_LEFT, "right" : ROTATE_LEFT ,"left" : ROTATE_RIGHT }
