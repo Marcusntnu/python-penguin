@@ -101,14 +101,14 @@ def ifVisiblePinguin(body):
     #he is gay
     if (facingYou(body)): runTheFuckAway(body)
     else:
-        moveTowardsPoint(body, 10, 10)
+        moveTowardsCenterOfMap(body)
 
 
 
 
 
 def runTheFuckAway(body):
-    moveTowardsPoint(body, body["you"]["x"]+body["enemies"]["x"] - body["mapWidth"],     body["you"]["y"]+body["enemies"]["y"] - body["mapWidth"])
+    return moveTowardsPoint(body, 1, 1)
 
 
 
