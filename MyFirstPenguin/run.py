@@ -1,6 +1,6 @@
 import os
 import json
-from random import randint
+import random
 import math
 
 ROTATE_LEFT = "rotate-left"
@@ -55,70 +55,101 @@ def moveTowardsPoint(body, pointX, pointY):
         plannedAction = SHOOT
     return plannedAction
 
-
-
 def moveTowardsCenterOfMap(body):
     centerPointX = math.floor(body["mapWidth"] / 2)
     centerPointY = math.floor(body["mapHeight"] / 2)
     return moveTowardsPoint(body, centerPointX, centerPointY)
 
-
-def fuckThatPinguin(body):
-    if body["enemies"]["weaponDamage"] > body["you"]["weaponDamage"]:
-        return runTheFuckAway(body)
-    else:
-        if (body["enemies"]["x"] - body["you"]["x"] < 6) or (body["enemies"]["y"] - body["you"]["y"] < 6)
-            return "shoot"
-        else:
-            return "pass"
-
-
-
-
-
-def facingYou(body):
-    xWay = "right" if body["enemies"]["x"] > body["you"]["x"] else xWay="left"
-    yWay = "bottom" if body["enemies"]["y"] > body["you"]["y"] else yWay="top"
-
-    hisDi = body["enemies"]["direction"]
-    youDi = body["you"]["direction"]
-
-
-    if ((hisDi == xWay) or (hisDi == yWay)) and (((youDi == "left" and hisDi == "right") or (youDi == "right" and hisDi == "left")) or ((youDi == "top" and hisDi == "bottom") or (youDi == "bottom" and hisDi == "top"))):
+def visibleEnemy(body):
+    if "x" in body["enemies"][0]:
         return True
+    return False
+
+def enemyInLine(body):
+    if body["enemies"][0]["x"] == body["you"]["x"]:
+        return "horisontal"
+    elif body["enemies"][0]["y"] == body["you"]["y"]:
+        return "vertical"
+    return "none"
+
+def lineVertical(body):
+    if body["enemies"][0]["x"] < body["you"]["x"]:
+        if body["enemies"][0]["direction"] == "right":
+            if body["you"]["direction"] == "left":
+                return "both see"
+            return "he sees"
+        if body["you"]["direction"] == "left":
+            return "you see"
     else:
-        return False
+        if body["enemies"][0]["direction"] == "left":
+            if body["you"]["direction"] == "right":
+                return "both see"
+            return "he sees"
+        if body["you"]["direction"] == "right":
+            return "you see"
 
-
-
-
-
-
-def ifVisiblePinguin(body):
-    #he is gay
-    if facingYou(body):
-        return runTheFuckAway(body)
+def lineHorisontal(body):
+    if body["enemies"][0]["y"] < body["you"]["y"]:
+        if body["enemies"][0]["direction"] == "bottom":
+            if body["you"]["direction"] == "top":
+                return "both see"
+            return "he sees"
+        if body["you"]["direction"] == "top":
+            return "you see"
     else:
-        return moveTowardsPoint(body, 10, 10)
+        if body["enemies"][0]["direction"] == "top":
+            if body["you"]["direction"] == "bottom":
+                return "both see"
+            return "he sees"
+        if body["you"]["direction"] == "bottom":
+            return "you see"
+    return "noone sees"
 
-
-
-
-
-def runTheFuckAway(body):
-    return moveTowardsPoint(body, 7, 7)
-
-
+def rotateToEnemy(body):
+    if body[enemies][0]["x"] == body["you"]["x"]:
+        if body[enemies][0]["y"] < body["you"]["y"]:
+            if body["you"]["direction"] == "right":
+                return ROTATE_LEFT
+            return ROTATE_RIGHT
+        else:
+            if body["you"]["direction"] == "right":
+                return ROTATE_RIGHT
+            return ROTATE_LEFT
+    if body[enemies][0]["x"] < body["you"]["x"]:
+        if body["you"]["direction"] == "top":
+            return ROTATE_LEFT
+        return ROTATE_RIGHT
+    else:
+        if body["you"]["direction"] == "top":
+            return ROTATE_RIGHT
+        return ROTATE_RIGHT
 
 
 def chooseAction(body):
-    action = PASS
-    action = "shoot"
+    action = moveTowardsCenterOfMap(body)
+    if visibleEnemy(body):
+        line = enemyInLine(body)
+        if line == "vertical":
+            vert = lineVertical(body)
+            if vert == "he sees":
+                action = RETREAT
+            elif vert == "both see":
+                action = SHOOT
+            elif vert == "you see":
+                action = SHOOT
+            else:
+                action = rotateToEnemy(body)
+        elif line == "horisontal":
+            hori = lineHorisontal(body)
+            if hori == "he sees":
+                action = RETREAT
+            elif hori == "both see":
+                action = SHOOT
+            elif hori == "you see":
+                action = SHOOT
+            else:
+                action = rotateToEnemy(body)
     return action
-
-
-
-
 
 env = os.environ
 req_params_query = env['REQ_PARAMS_QUERY']
@@ -128,8 +159,8 @@ response = {}
 returnObject = {}
 if req_params_query == "info":
     returnObject["name"] = "Nils Olav"
-    returnObject["team"] = "Garden"
-elif req_params_query == "command":    
+    returnObject["team"] = "Det norske forsvaret"
+elif req_params_query == "command":
     body = json.loads(open(env["req"], "r").read())
     returnObject["command"] = chooseAction(body)
 
