@@ -90,11 +90,6 @@ def facingYou(body):
 
 
 
-def DangerDanger(body):
-
-
-
-
 
 
 def ifVisiblePinguin(body):
@@ -108,7 +103,7 @@ def ifVisiblePinguin(body):
 
 
 def runTheFuckAway(body):
-    return moveTowardsPoint(body, body["you"]["x"]+body["enemies"]["x"] - body["mapWidth"],     body["you"]["y"]+body["enemies"]["y"] - body["mapWidth"])
+    return moveTowardsPoint(body, 7, 7)
 
 
 
