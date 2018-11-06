@@ -60,9 +60,19 @@ def moveTowardsCenterOfMap(body):
     centerPointY = math.floor(body["mapHeight"] / 2)
     return moveTowardsPoint(body, centerPointX, centerPointY)
 
+
+def moveAround(body):
+    if not wallInFrontOfPenguin(body):
+        return moveTowardsPoint(body, body["mapWidth"]-1, 0)
+    elif wallInFrontOfPenguin("you"):
+        return moveTowardsPoint(body, 0, body["mapHeight"]-1)
+
+
+
+
 def chooseAction(body):
     action = PASS
-    action = moveTowardsCenterOfMap(body)
+    action = moveAround(body)
     return action
 
 env = os.environ
