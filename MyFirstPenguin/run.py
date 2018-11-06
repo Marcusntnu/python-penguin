@@ -55,14 +55,60 @@ def moveTowardsPoint(body, pointX, pointY):
         plannedAction = SHOOT
     return plannedAction
 
+
+
 def moveTowardsCenterOfMap(body):
     centerPointX = math.floor(body["mapWidth"] / 2)
     centerPointY = math.floor(body["mapHeight"] / 2)
     return moveTowardsPoint(body, centerPointX, centerPointY)
 
 
-def moveAround(body):
-    return moveTowardsPoint(body, randint(0, body["mapWidth"]/2), randint(0, body["mapHeight"]/2))
+def fuckThatPinguin(body):
+    if body["enemies"]["weaponDamage"] > body["you"]["weaponDamage"]:
+        return runTheFuckAway(body)
+    else:
+        if (body["enemies"]["x"] - body["you"]["x"] < 6) or (body["enemies"]["y"] - body["you"]["y"] < 6)
+            return "shoot"
+
+
+
+
+
+def facingYou(body):
+    xWay = "right" if body["enemies"]["x"] > body["you"]["x"] else xWay="left"
+    yWay = "bottom" if body["enemies"]["y"] > body["you"]["y"] else yWay="top"
+
+    hisDi = body["enemies"]["direction"]
+    youDi = body["you"]["direction"]
+
+
+    if ((hisDi == xWay) or (hisDi == yWay) and (((youDi == "left" and hisDi == "right") or (youDi == "right" and hisDi == "left")) or ((youDi == "top" and hisDi == "bottom") or (youDi == "bottom" and hisDi == "top")))):
+            return True
+    else:
+        return False
+
+
+
+
+def DangerDanger(body):
+
+
+
+
+
+
+def ifVisiblePinguin(body):
+    #he is gay
+    if (facingYou(body)): runTheFuckAway(body)
+    
+
+
+
+
+
+def runTheFuckAway(body):
+    moveTowardsPoint(body, body["you"]["x"]+body["enemies"]["x"] - body["mapWidth"],     body["you"]["y"]+body["enemies"]["y"] - body["mapWidth"])
+
 
 
 
