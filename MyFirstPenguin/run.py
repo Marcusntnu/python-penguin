@@ -69,6 +69,8 @@ def fuckThatPinguin(body):
     else:
         if (body["enemies"]["x"] - body["you"]["x"] < 6) or (body["enemies"]["y"] - body["you"]["y"] < 6)
             return "shoot"
+        else:
+            return "pass"
 
 
 
@@ -82,7 +84,7 @@ def facingYou(body):
     youDi = body["you"]["direction"]
 
 
-    if ((hisDi == xWay) or (hisDi == yWay) and (((youDi == "left" and hisDi == "right") or (youDi == "right" and hisDi == "left")) or ((youDi == "top" and hisDi == "bottom") or (youDi == "bottom" and hisDi == "top")))):
+    if ((hisDi == xWay) or (hisDi == yWay) and ((youDi == "left" and hisDi == "right") or (youDi == "right" and hisDi == "left")) or ((youDi == "top" and hisDi == "bottom") or (youDi == "bottom" and hisDi == "top"))):
             return True
     else:
         return False
