@@ -113,7 +113,7 @@ def runTheFuckAway(body):
 
 def chooseAction(body):
     action = PASS
-    action = "fire"
+    action = "shoot"
     return action
 
 
