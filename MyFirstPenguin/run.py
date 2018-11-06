@@ -62,7 +62,7 @@ def moveTowardsCenterOfMap(body):
 
 
 def moveAround(body):
-    return moveTowardsPoint(body, randint(0, body["mapWidth"]), randint(0, body["mapHeight"]))
+    return moveTowardsPoint(body, randint(0, body["mapWidth"]/2), randint(0, body["mapHeight"]/2))
 
 
 
