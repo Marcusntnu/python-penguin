@@ -96,7 +96,8 @@ def facingYou(body):
 
 def ifVisiblePinguin(body):
     #he is gay
-    if (facingYou(body)): return runTheFuckAway(body)
+    if facingYou(body):
+        return runTheFuckAway(body)
     else:
         return moveTowardsPoint(body, 10, 10)
 
@@ -114,6 +115,10 @@ def chooseAction(body):
     action = PASS
     action = ifVisiblePinguin(body)
     return action
+
+
+
+
 
 env = os.environ
 req_params_query = env['REQ_PARAMS_QUERY']
