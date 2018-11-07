@@ -62,59 +62,6 @@ def moveTowardsCenterOfMap(body):
 
 
 
-def fuckThatPinguin(body):
-    if body["enemies"]["weaponDamage"] > body["you"]["weaponDamage"]:
-        return moveTowardsPoint(body, 1, 1)
-    else:
-        if (body["enemies"]["x"] - body["you"]["x"] < 6) or (body["enemies"]["y"] - body["you"]["y"] < 6)
-            return "shoot"
-        else:
-            return "pass"
-
-
-
-
-
-def facingYou(body):
-    xWay = "right" if body["enemies"]["x"] > body["you"]["x"] else xWay="left"
-    yWay = "bottom" if body["enemies"]["y"] > body["you"]["y"] else yWay="top"
-
-    hisDi = body["enemies"]["direction"]
-    youDi = body["you"]["direction"]
-
-
-    if ((hisDi == xWay) or (hisDi == yWay)) and (((youDi == "left" and hisDi == "right") or (youDi == "right" and hisDi == "left")) or ((youDi == "top" and hisDi == "bottom") or (youDi == "bottom" and hisDi == "top"))):
-        return True
-    else:
-        return False
-
-
-
-def smartWalk(body):
-    x = body["you"]["x"]
-    y = body["you"]["y"]
-    if y < body["mapHeight"] - 10:
-        return moveTowardsPoint(body, body["mapWidth"] - x/3, body["mapHeight"] -1)
-    else:
-        return moveTowardsPoint(body, body["mapWidth"] - x / 2, body["mapHeight"] - y / 4)
-
-
-def middleBoardState(body):
-    x = body["you"]["x"]
-    y = body["you"]["y"]
-    if (x < body["mapWidth"]-body["mapWidth"]/3) and (x > body["mapWidth"]/3) and not visibleEnemy(body)
-        return SHOOT
-    else:
-        return moveTowardsCenterOfMap(body)
-
-
-
-
-
-
-
-
-
 def visibleEnemy(body):
     if "x" in body["enemies"][0]:
         return True
