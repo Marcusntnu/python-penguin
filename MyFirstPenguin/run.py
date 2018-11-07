@@ -237,8 +237,8 @@ def closestBonusLoc(body, bonus_locations):
     minY = (bonus_locations[0][1] - posY)**2
     for i in bonus_locations:
         if (((bonus_locations[i][0] - posX)**2) + ((bonus_locations[i][1] - posY)**2)) < minX + minY:
-            minX = bonus_locations[i][0]
-            minY = bonus_locations[i][1]
+            minX = (bonus_locations[i][0] - posX)**2
+            minY = (bonus_locations[i][1] - posY)**2
             minIndex = i
     return minIndex
 
