@@ -128,7 +128,7 @@ def rotateToEnemy(body):
 
 
 def chooseAction(body):
-    action = middleBoardState(body)
+    action = moveTowardsCenterOfMap(body)
     if visibleEnemy(body):
         line = enemyInLine(body)
         if line == "vertical":
