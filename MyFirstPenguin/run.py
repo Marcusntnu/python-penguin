@@ -60,8 +60,6 @@ def moveTowardsCenterOfMap(body):
     centerPointY = math.floor(body["mapHeight"] / 2)
     return moveTowardsPoint(body, centerPointX, centerPointY)
 
-
-
 def visibleEnemy(body):
     if "x" in body["enemies"][0]:
         return True
@@ -126,6 +124,112 @@ def rotateToEnemy(body):
             return ROTATE_RIGHT
         return ROTATE_RIGHT
 
+def wallbetween(body):
+    hisX = body["enemies"][0]["x"]
+    hisY = body["enemies"][0]["y"]
+    myX = body["you"]["x"]
+    myY = body["you"]["y"]
+    if myX == hisX:
+        for i in body["walls"]:
+            if i["y"] < min(hisY,myY) and i["y"] > max(hisY,myY):
+                return True
+    if myY == hisY:
+        for i in body["walls"]:
+            if i["x"] < min(hisX,myX) and i["x"] > max(hisX,myX):
+                return True
+    return False
+
+def moveAway(body):
+    return RETREAT
+
+def isEnemyVisible(body):
+    if "x" not in body["enemies"][0]:
+        return False
+    else:
+        return True
+
+def getRelativePosition(you, enemy):
+    if you["direction"] == "top":
+        return enemy["x"] - you["x"], you["y"] - enemy["y"]
+    if you["direction"] == "bottom":
+        return you["x"] - enemy["x"], enemy["y"]-you["y"]
+    if you["direction"] == "right":
+        return enemy["y"] - you["y"], enemy["x"]-you["x"]
+    if you["direction"] == "left":
+        return you["y"] - enemy["y"], you["y"]-enemy["y"]
+
+def ableToAttack(you, enemy):
+    x, y = getRelativePosition(you, enemy)
+    if y >= 0 and y - you["weaponRange"] and x == 0:
+        return True
+
+    return False
+
+def turnsToAttack(body, you, enemy):
+    x, y = getRelativePosition(you, enemy)
+    min_axis = min(abs(x), abs(y))
+    max_axis = max(abs(x), abs(y))
+    if y > 0:
+
+        if x > 0:
+            return min_axis + 1 + min(0, (max_axis-you["weaponRange"])), moveTowardsPoint(body, enemy["x"], enemy["y"])
+        elif x < 0:
+            return min_axis + 1 + min(0, (max_axis-you["weaponRange"])), moveTowardsPoint(body, enemy["x"], enemy["y"])
+        else:
+            if ableToAttack(you, enemy):
+                return min_axis + min(0, (max_axis-you["weaponRange"])), SHOOT
+            else:
+                return min_axis + min(0, (max_axis-you["weaponRange"])), moveTowardsPoint(body, enemy["x"], enemy["y"])
+    elif y < 0:
+        if x > 0:
+            return min_axis + 1 + min(0, (max_axis-you["weaponRange"])), moveTowardsPoint(body, enemy["x"], enemy["y"])
+        elif x < 0:
+            return min_axis + 1 + min(0, (max_axis-you["weaponRange"])), moveTowardsPoint(body, enemy["x"], enemy["y"])
+        else:
+            if ableToAttack(you, enemy):
+                return min_axis + min(0, (max_axis-you["weaponRange"])), SHOOT
+            else:
+                return min_axis + min(0, (max_axis-you["weaponRange"])), moveTowardsPoint(body, enemy["x"], enemy["y"])
+    else:
+        if x > 0:
+            return min(0, (max_axis-you["weaponRange"])) + 1, moveTowardsPoint(body, enemy["x"], enemy["y"])
+        elif x < 0:
+            return min(0, (max_axis-you["weaponRange"])) + 1, moveTowardsPoint(body, enemy["x"], enemy["y"])
+
+    return 11000, PASS
+
+def shouldAttack(body, you, enemy):
+    youTurnsToAttack, action = turnsToAttack(body, you, enemy)
+    youTurnsToAttack = max(0, youTurnsToAttack)
+    enemyTurnsToAttack, th = turnsToAttack(body, enemy, you)
+    enemyTurnsToAttack = max(0, enemyTurnsToAttack)
+    if (you["strength"] - enemy["weaponDamage"] * min(0, (enemyTurnsToAttack-youTurnsToAttack)))/enemy["weaponDamage"] >= (enemy["strength"] - you["weaponDamage"] * min(0, (youTurnsToAttack-enemyTurnsToAttack)))/you["weaponDamage"]:
+        return True, action
+    else:
+        return False, RETREAT
+
+def getBonuesDistance(body, type):
+    result = []
+    if not len(body["bonusTiles"]):
+        return False
+    for bonus in body["bonusTiles"]:
+        if bonus["type"] == type:
+            result.append([bonus["x"], bonus["y"]])
+
+    return sorted(result, key=sum)
+
+def goToBonus(body):
+    bonus_locations = 0
+    if body["you"]["strength"] < 300:
+        bonus_locations = getBonuesDistance(body, "strength")
+    if not bonus_locations:
+        bonus_locations = getBonuesDistance(body, "weapon-range")
+    if not bonus_locations:
+        bonus_locations = getBonuesDistance(body, "weapon-power")
+    if not bonus_locations:
+        return moveTowardsCenterOfMap(body)
+    else:
+        return moveTowardsPoint(body, bonus_locations[0][0], bonus_locations[0][1])
 
 def chooseAction(body):
     action = moveTowardsCenterOfMap(body)
@@ -134,7 +238,10 @@ def chooseAction(body):
         if line == "vertical":
             vert = lineVertical(body)
             if vert == "he sees":
-                action = RETREAT
+                if wallbetween(body):
+                    action = rotateToEnemy(body)
+                else:
+                    action = moveAway(body)
             elif vert == "both see":
                 action = SHOOT
             elif vert == "you see":
@@ -144,16 +251,19 @@ def chooseAction(body):
         elif line == "horisontal":
             hori = lineHorisontal(body)
             if hori == "he sees":
-                action = RETREAT
+                if wallbetween(body):
+                    action = rotateToEnemy(body)
+                else:
+                    action = moveAway(body)
             elif hori == "both see":
                 action = SHOOT
             elif hori == "you see":
                 action = SHOOT
             else:
                 action = rotateToEnemy(body)
+    else:
+        action = goToBonus(body)
     return action
-
-
 
 env = os.environ
 req_params_query = env['REQ_PARAMS_QUERY']
