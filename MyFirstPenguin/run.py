@@ -2,6 +2,7 @@ import os
 import json
 import random
 import math
+from functools import reduce
 
 ROTATE_LEFT = "rotate-left"
 ROTATE_RIGHT = "rotate-right"
@@ -225,7 +226,9 @@ def getBonuesDistance(body, type):
     for bonus in body["bonusTiles"]:
         if bonus["type"] == type:
             result.append([bonus["x"], bonus["y"]])
-    return sorted(result, key=sum)
+    posX = body["you"]["x"]
+    posY = body["you"]["y"]
+    return sorted(result, key=reduce(lambda x, y: abs(x-posX) + abs(y-posY), result))
 
 
 def goToBonus(body):
