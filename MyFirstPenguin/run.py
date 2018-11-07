@@ -67,10 +67,20 @@ def visibleEnemy(body):
 
 def enemyInLine(body):
     if body["enemies"][0]["x"] == body["you"]["x"]:
-        return "horisontal"
+        return "hori right"
     elif body["enemies"][0]["y"] == body["you"]["y"]:
         return "vertical"
+    elif body["enemies"][0]["x"] == body["you"]["x"]+1:
+        return "hori right"
+    elif body["enemies"][0]["x"] == body["you"]["x"]-1:
+        return "hori left"
+    elif body["enemies"][0]["y"] == body["you"]["y"] +1:
+        return "vert bottom"
+    elif body["enemies"][0]["y"] == body["you"]["y"] +1:
+        return "vert top"
     return "none"
+
+
 
 def lineVertical(body):
     if body["enemies"][0]["x"] < body["you"]["x"]:
@@ -218,6 +228,22 @@ def getBonuesDistance(body, type):
 
     return sorted(result, key=sum)
 
+
+def closestBonusLoc(body, bonus_locations):
+    minIndex = 0
+    posX = body["you"]["x"]
+    posY = body["you"]["y"]
+    minX = (bonus_locations[0][0] - posX)**2
+    minY = (bonus_locations[0][1] - posY)**2
+    for i in bonus_locations:
+        if (((bonus_locations[i][0] - posX)**2) + ((bonus_locations[i][1] - posY)**2)) < minX + minY:
+            minX = bonus_locations[i][0]
+            minY = bonus_locations[i][1]
+            minIndex = i
+    return minIndex
+
+
+
 def goToBonus(body):
     bonus_locations = 0
     if body["you"]["strength"] < 300:
@@ -229,7 +255,7 @@ def goToBonus(body):
     if not bonus_locations:
         return moveTowardsCenterOfMap(body)
     else:
-        return moveTowardsPoint(body, bonus_locations[0][0], bonus_locations[0][1])
+        return moveTowardsPoint(body, bonus_locations[closestBonusLoc(body, bonus_locations)][0], bonus_locations[closestBonusLoc(body, bonus_locations)][1])
 
 def chooseAction(body):
     action = moveTowardsCenterOfMap(body)
