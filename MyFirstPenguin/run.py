@@ -225,23 +225,7 @@ def getBonuesDistance(body, type):
     for bonus in body["bonusTiles"]:
         if bonus["type"] == type:
             result.append([bonus["x"], bonus["y"]])
-
     return sorted(result, key=sum)
-
-
-def closestBonusLoc(body, bonus_locations):
-    minIndex = 0
-    posX = body["you"]["x"]
-    posY = body["you"]["y"]
-    minX = (bonus_locations[0][0] - posX)**2
-    minY = (bonus_locations[0][1] - posY)**2
-    for i in bonus_locations:
-        if (((bonus_locations[i][0] - posX)**2) + ((bonus_locations[i][1] - posY)**2)) < minX + minY:
-            minX = (bonus_locations[i][0] - posX)**2
-            minY = (bonus_locations[i][1] - posY)**2
-            minIndex = i
-    return minIndex
-
 
 
 def goToBonus(body):
@@ -255,7 +239,7 @@ def goToBonus(body):
     if not bonus_locations:
         return moveTowardsCenterOfMap(body)
     else:
-        return moveTowardsPoint(body, bonus_locations[closestBonusLoc(body, bonus_locations)][0], bonus_locations[closestBonusLoc(body, bonus_locations)][1])
+        return moveTowardsPoint(body, bonus_locations[0][0], bonus_locations[0][1])
 
 def chooseAction(body):
     action = moveTowardsCenterOfMap(body)
